@@ -1,0 +1,67 @@
+﻿body {
+padding-top: 20px;
+padding-bottom: 40px;
+}
+
+/* Logo */
+.logo {
+background: url('../img/logo.png') no-repeat 0 transparent;
+display: block;
+width: 200px;
+}
+
+.logo h3 {
+left: -5000px;
+position: relative;
+}
+
+/* Custom container */
+.container-narrow {
+margin: 0 auto;
+max-width: 960px;
+}
+.container-narrow > hr {
+margin: 30px 0;
+}
+
+/* Landing page */
+.brief div {
+border-right: 1px dotted #CCC;
+font-size: 16px;
+text-align: left;
+height: 6em;
+width: 209px;
+padding-right: 10px;
+}
+.subbrief {
+margin: 50px 0;
+}
+
+.jumbotron {
+background: url("../img/jumbotron-bg.png") repeat-x scroll 0 bottom transparent;
+margin-top: 60px;
+margin-left: 0;
+text-align: center;
+}
+.jumbotron h1 {
+font-size: 42px;
+line-height: 1;
+margin-bottom: 60px;
+}
+.jumbotron .btn {
+font-size: 21px;
+padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+margin: 20px 0;
+}
+.marketing p + h4 {
+margin-top: 28px;
+}
+
+/* Bootstrap */
+.sidebar-nav {
+padding: 9px 0;
+}
