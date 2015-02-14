@@ -19,10 +19,7 @@ import DAO.transfer.TransferObject;
 
 import com.google.gson.Gson;
 
-/**
- * Servlet implementation class RestDataServlet
- */
-@WebServlet
+@WebServlet(urlPatterns = { "/rest/data.do" })
 public class RestDataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

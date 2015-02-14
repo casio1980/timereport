@@ -13,10 +13,7 @@ import DAO.MySqlDAOFactory;
 import DAO.transfer.TransferObject;
 import DAO.transfer.User;
 
-/**
- * Servlet implementation class RestUserServlet
- */
-@WebServlet
+@WebServlet(urlPatterns = { "/rest/users.do" })
 public class RestUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

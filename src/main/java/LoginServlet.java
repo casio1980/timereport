@@ -1,10 +1,10 @@
-
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +14,10 @@ import utilities.PasswordHash;
 import DAO.MySqlDAOFactory;
 import DAO.transfer.User;
 
-/**
- * Servlet implementation class LoginServlet
- */
-@WebServlet
+@WebServlet(urlPatterns = { "/login.do" }, initParams = {
+		@WebInitParam(name = "init", value = "login.jsp"),
+		@WebInitParam(name = "success", value = "secure/home.do"),
+		@WebInitParam(name = "fail", value = "login.do?error=1") })
 public class LoginServlet extends SessionServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class LoginServlet extends SessionServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
+
 		RequestDispatcher rd = request.getRequestDispatcher(getServletConfig()
 				.getInitParameter("init"));
 		rd.include(request, response);
