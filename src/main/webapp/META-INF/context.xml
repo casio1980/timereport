@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context>
-
-	<Resource name="jdbc/timereport" 
-		auth="Container" 
-		type="javax.sql.DataSource" 
-		username="scrapyd" 
-		password="123" 
+<Context className="org.apache.catalina.core.StandardContext"
+       reloadable="true"
+       antiJARLocking="true"
+       swallowOutput="true">
+	
+	<Resource name="jdbc/timereport"
+		auth="Container"
+		type="javax.sql.DataSource"
+		username="scrapyd"
+		password="123"
 		driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://localhost/timereport" 
+		url="jdbc:mysql://localhost/timereport"
 		maxActive="100" maxIdle="30" maxWait="10000" />
 
 </Context>
