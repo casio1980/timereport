@@ -32,7 +32,7 @@ CREATE TABLE `activities` (
   PRIMARY KEY (`id`),
   KEY `fk_activities_1_idx` (`companyId`),
   CONSTRAINT `fk_activities_1` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=537 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=573 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `data` (
   KEY `fk_data_2_idx` (`projectId`),
   KEY `fk_data_3_idx` (`activityId`),
   CONSTRAINT `fk_data_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1743 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1847 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +121,7 @@ CREATE TABLE `projects` (
   PRIMARY KEY (`id`),
   KEY `fk_projects_1_idx` (`companyId`),
   CONSTRAINT `fk_projects_1` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=290 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +137,7 @@ CREATE TABLE `users` (
   `firstName` varchar(45) NOT NULL,
   `lastName` varchar(45) NOT NULL,
   `email` varchar(128) NOT NULL,
-  `password` varchar(128) NOT NULL,
+  `password` varchar(128) DEFAULT NULL,
   `lastLogin` date DEFAULT NULL,
   `activationHash` varchar(45) DEFAULT NULL,
   `isAdmin` tinyint(1) DEFAULT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `UQ_USERS_EMAIL` (`email`),
   KEY `fk_users_1_idx` (`companyId`),
   CONSTRAINT `fk_users_1` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -737,4 +737,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-17 17:30:28
+-- Dump completed on 2015-02-17 19:06:12

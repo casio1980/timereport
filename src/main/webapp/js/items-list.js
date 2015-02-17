@@ -31,10 +31,8 @@ ItemsList = (function () {
                 : this.options.url;
         },
 
-        validation: {
-            name: {
-                required: true
-            }
+        validation: function() {
+            return this.options.validation;
         },
 
         initialize: function (attributes, options) {
@@ -171,34 +169,6 @@ ItemsList = (function () {
     var AddView = Backbone.View.extend({
         el: "#view",
         tagName: "div",
-        template: _.template("<div class=\"row\">" +
-        "<div class=\"col-md-12\">" +
-        "<h3><%= newRecordTitle %></h3>" +
-        "</div>" +
-        "</div>" +
-        "<div class=\"row\">" +
-        "<form class=\"form-horizontal\">" +
-            "<div class=\"form-group\">" +
-            "<label for=\"inputName\" class=\"col-sm-2 control-label\">Название</label>" +
-            "<div class=\"col-sm-10\">" +
-            "<input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" placeholder=\"Название\">" +
-            "<span class=\"help-block hidden\"></span>" +
-            "</div>" +
-            "</div>" +
-            "<div class=\"form-group\">" +
-            "<label for=\"inputDescription\" class=\"col-sm-2 control-label\">Описание</label>" +
-            "<div class=\"col-sm-10\">" +
-            "<textarea class=\"form-control\" rows=\"7\" id=\"description\" name=\"description\" placeholder=\"Описание\" />" +
-            "<span class=\"help-block hidden\"></span>" +
-            "</div>" +
-            "</div>" +
-            "<div class=\"form-group\">" +
-            "<div class=\"col-sm-offset-2 col-sm-10\">" +
-            "<button type=\"submit\" class=\"btn btn-success\">Создать</button>" +
-            "</div>" +
-            "</div>" +
-        "</form>" +
-        "</div>"),
 
         events: {
             "submit form": "onSubmit"
@@ -207,13 +177,12 @@ ItemsList = (function () {
         initialize: function () {
             Backbone.Validation.bind(this);
             this.modelBinder = new Backbone.ModelBinder();
+            this.template = _.template(this.model.options.addViewTemplate);
         },
 
         render: function() {
             this.$el.empty();
-            this.$el.append(this.template({
-                newRecordTitle: this.model.options.newRecordTitle
-            }));
+            this.$el.append(this.template({}));
 
             this.modelBinder.bind(this.model, this.el);
         },
@@ -228,7 +197,8 @@ ItemsList = (function () {
                         app.router.navigate("", true);
                     },
                     error: function () {
-                        $("form").prepend("<div id=\"alert\" class=\"alert alert-danger\" role=\"alert\">" +
+                        if ($(".alert").length) return;
+                        $("form").prepend("<div class=\"alert alert-danger\" role=\"alert\">" +
                             "<strong>Ошибка!</strong> Не удалось сохранить запись.</div>");
                     }
                 });
@@ -322,7 +292,8 @@ ItemsList = (function () {
         itemAdd: function() {
             new ItemModel(null, {
                 url: app.params.url,
-                newRecordTitle: app.params.newRecordTitle
+                validation: app.params.validation,
+                addViewTemplate: app.params.addViewTemplate
             });
         },
 

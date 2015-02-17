@@ -41,11 +41,43 @@
     <script src="../js/plugins.js"></script>
     <script src="../js/items-list.js"></script>
     
+    <script id="addViewTemplate" type="text/template">
+            <div class="row">
+            <div class="col-md-12">
+            <h3>Новый проект</h3>
+            </div>
+            </div>
+            <div class="row">
+            <form class="form-horizontal">
+                <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Название</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Название">
+                <span class="help-block hidden"></span>
+                </div>
+                </div>
+                <div class="form-group">
+                <label for="description" class="col-sm-2 control-label">Описание</label>
+                <div class="col-sm-10">
+                <textarea class="form-control" rows="7" id="description" name="description" placeholder="Описание" />
+                <span class="help-block hidden"></span>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">Добавить</button>
+                </div>
+                </div>
+            </form>
+            </div>
+	</script>
+    
      <script type="text/javascript">
          ItemsList.init({
              url: "${url}",
+             validation: { name: { required: true} },             
              addButtonTitle: "Добавить проект",
-             newRecordTitle: "Новый проект"
+             addViewTemplate: $("#addViewTemplate").text()
          });
      </script>
 

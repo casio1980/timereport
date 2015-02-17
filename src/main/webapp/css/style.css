@@ -2,6 +2,10 @@ body {
 	padding-top: 50px;
 }
 
+textarea {
+resize: none;
+}
+
 .navbar-brand {
 	background: url('../img/logo-grey.png') no-repeat 15px 11px;
 	padding: 15px 22px;

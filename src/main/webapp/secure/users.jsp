@@ -40,12 +40,51 @@
 
     <script src="../js/plugins.js"></script>
     <script src="../js/items-list.js"></script>
-    
+        
+    <script id="addViewTemplate" type="text/template">
+            <div class="row">
+            <div class="col-md-12">
+            <h3>Новый сотрудник</h3>
+            </div>
+            </div>
+            <div class="row">
+            <form class="form-horizontal">
+                <div class="form-group">
+                <label for="firstName" class="col-sm-2 control-label">Имя</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Имя">
+                <span class="help-block hidden"></span>
+                </div>
+                </div>
+                <div class="form-group">
+                <label for="lastName" class="col-sm-2 control-label">Фамилия</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Фамилия">
+                <span class="help-block hidden"></span>
+                </div>
+                </div>
+                <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                <span class="help-block hidden"></span>
+                </div>
+                </div>
+                <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">Добавить</button>
+                </div>
+                </div>
+            </form>
+            </div>
+	</script>
+	
     <script type="text/javascript">
         ItemsList.init({
             url: "${url}",
+            validation: { firstName: { required: true }, lastName: { required: true }, email: { required: true } },
             addButtonTitle: "Добавить сотрудника",
-            newRecordTitle: "Новый сотрудник"
+            addViewTemplate: $("#addViewTemplate").text()
         });
     </script>
 
