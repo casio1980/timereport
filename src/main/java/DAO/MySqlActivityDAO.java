@@ -21,6 +21,7 @@ public class MySqlActivityDAO implements ActivityDAO {
 		obj.setId(rs.getInt("id"));
 		obj.setCompanyId(rs.getInt("companyId"));
 		obj.setName(rs.getString("name"));
+		obj.setDescription(rs.getString("description"));
 
 		try {
 			obj.setHours(rs.getDouble("hours"));
@@ -44,6 +45,33 @@ public class MySqlActivityDAO implements ActivityDAO {
 
 		return fillFromResultSet(rs);
 	}
+	
+	@Override
+	public void addActivity(Activity activity) throws SQLException {
+		
+		String sql = "INSERT INTO activities (companyId, name, description) VALUES (?, ?, ?)";
+
+		PreparedStatement stm = conn.prepareStatement(sql);
+		stm.setInt(1, activity.getCompanyId());
+		stm.setString(2, activity.getName());
+		stm.setString(3, activity.getDescription());
+		
+		stm.executeUpdate();
+	}
+
+	@Override
+	public void updateActivity(Activity activity) throws SQLException {
+
+		String sql = "UPDATE activities SET companyId = ?, name = ?, description = ? WHERE id = ?";
+
+		PreparedStatement stm = conn.prepareStatement(sql);
+		stm.setInt(1, activity.getCompanyId());
+		stm.setString(2, activity.getName());
+		stm.setString(3, activity.getDescription());		
+		stm.setInt(4, activity.getId());
+
+		stm.executeUpdate();
+	}	
 
 	@Override
 	public List<Activity> getActivitiesByCompany(int companyId)

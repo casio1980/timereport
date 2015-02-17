@@ -1,25 +1,67 @@
 ItemsList = (function () {
 
+    // TODO - move to plugins
+    // Extend the validation callbacks to work with Bootstrap, as used in this example
+    // See: http://thedersen.com/projects/backbone-validation/#configuration/callbacks
+    _.extend(Backbone.Validation.callbacks, {
+        valid: function (view, attr, selector) {
+            var $el = view.$('[name=' + attr + ']'),
+                $group = $el.closest('.form-group');
+
+            $group.removeClass('has-error');
+            $group.find('.help-block').html('').addClass('hidden');
+        },
+        invalid: function (view, attr, error, selector) {
+            var $el = view.$('[name=' + attr + ']'),
+                $group = $el.closest('.form-group');
+
+            $group.addClass('has-error');
+            $group.find('.help-block').html(error).removeClass('hidden');
+        }
+    });
+    _.extend(Backbone.Validation.messages, {
+        required: "Поле не может быть пустым"
+    });
+
     var ItemModel = Backbone.Model.extend({
 
         url: function() {
-            return this.options.url;
+            return this.options.id
+                ? this.options.url + "?id=" + this.options.id
+                : this.options.url;
+        },
+
+        validation: {
+            name: {
+                required: true
+            }
         },
 
         initialize: function (attributes, options) {
             this.options = options;
-            this.view = new ItemView({
-                "model": this
-            });
-            this.load();
+
+            if (this.options.id) { // existing model
+                this.view = new ItemView({
+                    model: this
+                });
+                this.load();
+            } else { // new model
+                this.view = new AddView({
+                    model: this
+                });
+                this.view.render();
+            }
         },
 
         load: function() {
-
             var self = this;
             this.fetch().done(function() {
                 self.view.render();
             });
+        },
+
+        save: function(options) {
+            Backbone.sync("create", this, options);
         },
 
         parse : function(resp) {
@@ -45,7 +87,7 @@ ItemsList = (function () {
             this.options = options;
 
             this.view = new ListView({
-                "collection": this
+                collection: this
             });
 
             this.view.render();
@@ -100,11 +142,11 @@ ItemsList = (function () {
                 : "";
 
             this.$el.append(this.template({
-                "name": this.model.item.get("name"),
-                "description": description,
-                "hours": $.toHours(this.model.item.get("hours")),
-                "lColName": this.model.lColName,
-                "rColName": this.model.rColName
+                name: this.model.item.get("name"),
+                description: description,
+                hours: $.toHours(this.model.item.get("hours")),
+                lColName: this.model.lColName,
+                rColName: this.model.rColName
             }));
 
             this.renderCol("#lcol", this.model.lColUrl, this.model.lCol);
@@ -117,12 +159,80 @@ ItemsList = (function () {
 
             collection.each(function(item) {
                 $list.append(self.itemTemplate({
-                    "url": url,
-                    "id": item.get("id"),
-                    "name": item.get("name"),
-                    "hours": $.toHours(item.get("hours"))
+                    url: url,
+                    id: item.get("id"),
+                    name: item.get("name"),
+                    hours: $.toHours(item.get("hours"))
                 }));
             });
+        }
+    });
+
+    var AddView = Backbone.View.extend({
+        el: "#view",
+        tagName: "div",
+        template: _.template("<div class=\"row\">" +
+        "<div class=\"col-md-12\">" +
+        "<h3><%= newRecordTitle %></h3>" +
+        "</div>" +
+        "</div>" +
+        "<div class=\"row\">" +
+        "<form class=\"form-horizontal\">" +
+            "<div class=\"form-group\">" +
+            "<label for=\"inputName\" class=\"col-sm-2 control-label\">Название</label>" +
+            "<div class=\"col-sm-10\">" +
+            "<input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" placeholder=\"Название\">" +
+            "<span class=\"help-block hidden\"></span>" +
+            "</div>" +
+            "</div>" +
+            "<div class=\"form-group\">" +
+            "<label for=\"inputDescription\" class=\"col-sm-2 control-label\">Описание</label>" +
+            "<div class=\"col-sm-10\">" +
+            "<textarea class=\"form-control\" rows=\"7\" id=\"description\" name=\"description\" placeholder=\"Описание\" />" +
+            "<span class=\"help-block hidden\"></span>" +
+            "</div>" +
+            "</div>" +
+            "<div class=\"form-group\">" +
+            "<div class=\"col-sm-offset-2 col-sm-10\">" +
+            "<button type=\"submit\" class=\"btn btn-success\">Создать</button>" +
+            "</div>" +
+            "</div>" +
+        "</form>" +
+        "</div>"),
+
+        events: {
+            "submit form": "onSubmit"
+        },
+
+        initialize: function () {
+            Backbone.Validation.bind(this);
+            this.modelBinder = new Backbone.ModelBinder();
+        },
+
+        render: function() {
+            this.$el.empty();
+            this.$el.append(this.template({
+                newRecordTitle: this.model.options.newRecordTitle
+            }));
+
+            this.modelBinder.bind(this.model, this.el);
+        },
+
+        onSubmit: function(e) {
+            e.preventDefault();
+
+            if (this.model.isValid(true)) {
+
+                this.model.save({
+                    success: function () {
+                        app.router.navigate("", true);
+                    },
+                    error: function () {
+                        $("form").prepend("<div id=\"alert\" class=\"alert alert-danger\" role=\"alert\">" +
+                            "<strong>Ошибка!</strong> Не удалось сохранить запись.</div>");
+                    }
+                });
+            }
         }
     });
 
@@ -152,7 +262,7 @@ ItemsList = (function () {
 
         render: function() {
             this.$el.empty().append(this.template({
-                "addButtonTitle": this.collection.options.addButtonTitle
+                addButtonTitle: this.collection.options.addButtonTitle
             }));
         },
 
@@ -163,9 +273,9 @@ ItemsList = (function () {
             this.collection.search(searchStr).each(function(item) {
 
                 self.$el.find("#items-list").append(self.itemTemplate({
-                    "id": item.get("id"),
-                    "name": item.get("name"),
-                    "hours": $.toHours(item.get("hours"))
+                    id: item.get("id"),
+                    name: item.get("name"),
+                    hours: $.toHours(item.get("hours"))
                 }));
 
             });
@@ -186,7 +296,7 @@ ItemsList = (function () {
         },
 
         onAdd: function() {
-            // TODO
+            app.router.navigate("add", true);
         }
     });
 
@@ -194,6 +304,7 @@ ItemsList = (function () {
 
         routes: {
             "": "defaultView",
+            "add": "itemAdd",
             ":id": "itemView"
         },
 
@@ -208,9 +319,17 @@ ItemsList = (function () {
             });
         },
 
+        itemAdd: function() {
+            new ItemModel(null, {
+                url: app.params.url,
+                newRecordTitle: app.params.newRecordTitle
+            });
+        },
+
         itemView: function(id) {
             new ItemModel(null, {
-                url: app.params.url + "?id=" + id
+                id: id,
+                url: app.params.url
             });
         }
 

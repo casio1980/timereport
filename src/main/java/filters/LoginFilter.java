@@ -38,7 +38,8 @@ public class LoginFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse) response;
 
 		if (!isLoggedIn((HttpServletRequest) request)) {
-			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			//resp.sendError(HttpServletResponse.SC_UNAUTHORIZED); // TODO
+			resp.sendRedirect("../login.do");
 			return; // break the filter chain
 		}
 

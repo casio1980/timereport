@@ -10,7 +10,11 @@ public interface UserDAO {
 
 	public User getUser(String userName) throws SQLException;
 
-	public User createUser(int companyId, String firstName, String lastName,
+	public void addUser(User user) throws SQLException;
+
+	public void updateUser(User user) throws SQLException;
+
+	public User registerUser(int companyId, String firstName, String lastName,
 			String email, String password, boolean isAdmin, boolean isDemo)
 			throws SQLException;
 

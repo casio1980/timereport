@@ -65,9 +65,29 @@ public class MySqlUserDAO implements UserDAO {
 
 		return fillFromResultSet(rs);
 	}
+	
+	@Override
+	public void addUser(User user) throws SQLException {
+
+		String sql = "INSERT INTO users (companyId, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?)";
+
+		PreparedStatement stm = conn.prepareStatement(sql);
+		stm.setInt(1, user.getCompanyId());
+		stm.setString(2, user.getFirstName());
+		stm.setString(3, user.getLastName());
+		stm.setString(4, user.getEmail());
+		stm.setString(5, user.getPassword());
+
+		stm.executeUpdate();
+	}
 
 	@Override
-	public User createUser(int companyId, String firstName, String lastName,
+	public void updateUser(User user) throws SQLException {
+		// TODO
+	}	
+
+	@Override
+	public User registerUser(int companyId, String firstName, String lastName,
 			String email, String password, boolean isAdmin, boolean isDemo)
 			throws SQLException {
 

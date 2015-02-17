@@ -50,6 +50,33 @@ public class MySqlProjectDAO implements ProjectDAO {
 	}
 
 	@Override
+	public void addProject(Project project) throws SQLException {
+
+		String sql = "INSERT INTO projects (companyId, name, description) VALUES (?, ?, ?)";
+
+		PreparedStatement stm = conn.prepareStatement(sql);
+		stm.setInt(1, project.getCompanyId());
+		stm.setString(2, project.getName());
+		stm.setString(3, project.getDescription());
+
+		stm.executeUpdate();
+	}
+
+	@Override
+	public void updateProject(Project project) throws SQLException {
+
+		String sql = "UPDATE projects SET companyId = ?, name = ?, description = ? WHERE id = ?";
+
+		PreparedStatement stm = conn.prepareStatement(sql);
+		stm.setInt(1, project.getCompanyId());
+		stm.setString(2, project.getName());
+		stm.setString(3, project.getDescription());
+		stm.setInt(4, project.getId());
+
+		stm.executeUpdate();
+	}
+
+	@Override
 	public List<Project> getProjectsByCompany(int companyId)
 			throws SQLException {
 

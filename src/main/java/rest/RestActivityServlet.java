@@ -5,16 +5,18 @@ import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DAO.MySqlDAOFactory;
+import DAO.transfer.Activity;
 import DAO.transfer.TransferObject;
 import DAO.transfer.User;
 
+import com.google.gson.Gson;
+
 @WebServlet(urlPatterns = { "/rest/activities.do" })
-public class RestActivityServlet extends HttpServlet {
+public class RestActivityServlet extends RestServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -77,8 +79,24 @@ public class RestActivityServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// TODO
+		String payload = getRequestPayload(request);
+		
+		Activity activity = new Gson().fromJson(payload, Activity.class);
+		activity.setCompanyId((int) request.getSession().getAttribute(
+				"companyid"));
 
+		try (MySqlDAOFactory factory = new MySqlDAOFactory()) {
+
+			if (activity.getId() == 0)
+				factory.getActivityDAO().addActivity(activity);
+			else
+				factory.getActivityDAO().updateActivity(activity);
+
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+		
+		createEmptyResponse(response);
 	}
 
 	/**
@@ -88,7 +106,7 @@ public class RestActivityServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		// TODO
-
+		createEmptyResponse(response);
 	}
 
 }

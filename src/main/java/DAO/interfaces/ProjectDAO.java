@@ -8,6 +8,10 @@ import DAO.transfer.Project;
 public interface ProjectDAO {
 	public Project getProject(int projectId) throws SQLException;
 
+	public void addProject(Project project) throws SQLException;
+
+	public void updateProject(Project project) throws SQLException;
+
 	public List<Project> getProjectsByCompany(int companyId)
 			throws SQLException;
 

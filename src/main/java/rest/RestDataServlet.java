@@ -1,13 +1,11 @@
 package rest;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,7 +18,7 @@ import DAO.transfer.TransferObject;
 import com.google.gson.Gson;
 
 @WebServlet(urlPatterns = { "/rest/data.do" })
-public class RestDataServlet extends HttpServlet {
+public class RestDataServlet extends RestServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String jsonFmt = "{\"thisWeek\": %s, \"prevWeek\": %s, \"nextWeek\": %s, \"projects\": %s, \"data\": %s}";
@@ -87,7 +85,6 @@ public class RestDataServlet extends HttpServlet {
 
 		out.write(json);
 		out.flush();
-
 	}
 
 	/**
@@ -98,9 +95,6 @@ public class RestDataServlet extends HttpServlet {
 
 		String payload = getRequestPayload(request);
 		Data[] data = new Gson().fromJson(payload, Data[].class);
-
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
 
 		try (MySqlDAOFactory factory = new MySqlDAOFactory()) {
 
@@ -118,16 +112,8 @@ public class RestDataServlet extends HttpServlet {
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
-	}
-
-	private String getRequestPayload(HttpServletRequest request) throws IOException {
-		StringBuilder buffer = new StringBuilder();
-		BufferedReader reader = request.getReader();
-		String line;
-		while ((line = reader.readLine()) != null) {
-			buffer.append(line);
-		}
-		return buffer.toString();
+		
+		createEmptyResponse(response);		
 	}
 
 	/**
@@ -143,9 +129,6 @@ public class RestDataServlet extends HttpServlet {
 			return;
 		}
 
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-
 		try (MySqlDAOFactory factory = new MySqlDAOFactory()) {
 
 			factory.getDataDAO().deleteUserData(
@@ -154,7 +137,8 @@ public class RestDataServlet extends HttpServlet {
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
-
+		
+		createEmptyResponse(response);
 	}
 
 }

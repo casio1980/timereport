@@ -28,20 +28,12 @@ CREATE TABLE `activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `companyId` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
+  `description` varchar(2048) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_activities_1_idx` (`companyId`),
   CONSTRAINT `fk_activities_1` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=537 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `activities`
---
-
-LOCK TABLES `activities` WRITE;
-/*!40000 ALTER TABLE `activities` DISABLE KEYS */;
-/*!40000 ALTER TABLE `activities` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `companies`
@@ -54,17 +46,8 @@ CREATE TABLE `companies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `companies`
---
-
-LOCK TABLES `companies` WRITE;
-/*!40000 ALTER TABLE `companies` DISABLE KEYS */;
-/*!40000 ALTER TABLE `companies` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `data`
@@ -86,17 +69,8 @@ CREATE TABLE `data` (
   KEY `fk_data_2_idx` (`projectId`),
   KEY `fk_data_3_idx` (`activityId`),
   CONSTRAINT `fk_data_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1743 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `data`
---
-
-LOCK TABLES `data` WRITE;
-/*!40000 ALTER TABLE `data` DISABLE KEYS */;
-/*!40000 ALTER TABLE `data` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `project_activities`
@@ -116,15 +90,6 @@ CREATE TABLE `project_activities` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project_activities`
---
-
-LOCK TABLES `project_activities` WRITE;
-/*!40000 ALTER TABLE `project_activities` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project_activities` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `project_users`
 --
 
@@ -142,15 +107,6 @@ CREATE TABLE `project_users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `project_users`
---
-
-LOCK TABLES `project_users` WRITE;
-/*!40000 ALTER TABLE `project_users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `projects`
 --
 
@@ -165,17 +121,8 @@ CREATE TABLE `projects` (
   PRIMARY KEY (`id`),
   KEY `fk_projects_1_idx` (`companyId`),
   CONSTRAINT `fk_projects_1` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `projects`
---
-
-LOCK TABLES `projects` WRITE;
-/*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `projects` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -199,17 +146,8 @@ CREATE TABLE `users` (
   UNIQUE KEY `UQ_USERS_EMAIL` (`email`),
   KEY `fk_users_1_idx` (`companyId`),
   CONSTRAINT `fk_users_1` FOREIGN KEY (`companyId`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Temporary table structure for view `v_activities`
@@ -223,6 +161,7 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `companyId` tinyint NOT NULL,
   `name` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
   `hours` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -240,6 +179,7 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `companyId` tinyint NOT NULL,
   `name` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
   `hours` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -334,6 +274,7 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `companyId` tinyint NOT NULL,
   `name` tinyint NOT NULL,
+  `description` tinyint NOT NULL,
   `hours` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -630,7 +571,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_activities` AS select `a`.`id` AS `id`,`a`.`companyId` AS `companyId`,`a`.`name` AS `name`,coalesce(sum(`d`.`hours`),0) AS `hours` from (`activities` `a` left join `data` `d` on((`a`.`id` = `d`.`activityId`))) where ((`d`.`deleted` = 0) or isnull(`d`.`deleted`)) group by `a`.`id` */;
+/*!50001 VIEW `v_activities` AS select `a`.`id` AS `id`,`a`.`companyId` AS `companyId`,`a`.`name` AS `name`,`a`.`description` AS `description`,coalesce(sum(`d`.`hours`),0) AS `hours` from (`activities` `a` left join `data` `d` on((`a`.`id` = `d`.`activityId`))) where ((`d`.`deleted` = 0) or isnull(`d`.`deleted`)) group by `a`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -649,7 +590,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_project_activities_a` AS select `pa`.`projectId` AS `projectId`,`a`.`id` AS `id`,`a`.`companyId` AS `companyId`,`a`.`name` AS `name`,coalesce(sum(`d`.`hours`),0) AS `hours` from ((`project_activities` `pa` join `activities` `a` on((`a`.`id` = `pa`.`activityId`))) left join `data` `d` on(((`d`.`projectId` = `pa`.`projectId`) and (`d`.`activityId` = `pa`.`activityId`)))) where ((`d`.`deleted` = 0) or isnull(`d`.`deleted`)) group by `pa`.`projectId`,`pa`.`activityId` */;
+/*!50001 VIEW `v_project_activities_a` AS select `pa`.`projectId` AS `projectId`,`a`.`id` AS `id`,`a`.`companyId` AS `companyId`,`a`.`name` AS `name`,`a`.`description` AS `description`,coalesce(sum(`d`.`hours`),0) AS `hours` from ((`project_activities` `pa` join `activities` `a` on((`a`.`id` = `pa`.`activityId`))) left join `data` `d` on(((`d`.`projectId` = `pa`.`projectId`) and (`d`.`activityId` = `pa`.`activityId`)))) where ((`d`.`deleted` = 0) or isnull(`d`.`deleted`)) group by `pa`.`projectId`,`pa`.`activityId` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -744,7 +685,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `v_user_activities_a` AS select `d`.`userId` AS `userId`,`a`.`id` AS `id`,`a`.`companyId` AS `companyId`,`a`.`name` AS `name`,coalesce(sum(`d`.`hours`),0) AS `hours` from (`data` `d` join `activities` `a` on((`a`.`id` = `d`.`activityId`))) where ((`d`.`deleted` = 0) or isnull(`d`.`deleted`)) group by `d`.`userId` */;
+/*!50001 VIEW `v_user_activities_a` AS select `d`.`userId` AS `userId`,`a`.`id` AS `id`,`a`.`companyId` AS `companyId`,`a`.`name` AS `name`,`a`.`description` AS `description`,coalesce(sum(`d`.`hours`),0) AS `hours` from (`data` `d` join `activities` `a` on((`a`.`id` = `d`.`activityId`))) where ((`d`.`deleted` = 0) or isnull(`d`.`deleted`)) group by `d`.`userId` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -796,4 +737,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-09 23:24:51
+-- Dump completed on 2015-02-17 17:30:28

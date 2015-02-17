@@ -33,6 +33,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.modelbinder/1.0.5/Backbone.ModelBinder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.validation/0.11.3/backbone-validation-min.js"></script>    
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="../js/bootstrap-typeahead.min.js"></script>
 
@@ -42,7 +44,8 @@
      <script type="text/javascript">
          ItemsList.init({
              url: "${url}",
-             addButtonTitle: "Добавить проект"
+             addButtonTitle: "Добавить проект",
+             newRecordTitle: "Новый проект"
          });
      </script>
 

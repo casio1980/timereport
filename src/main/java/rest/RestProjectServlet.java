@@ -5,16 +5,18 @@ import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DAO.MySqlDAOFactory;
+import DAO.transfer.Project;
 import DAO.transfer.TransferObject;
 import DAO.transfer.User;
 
+import com.google.gson.Gson;
+
 @WebServlet(urlPatterns = { "/rest/projects.do" })
-public class RestProjectServlet extends HttpServlet {
+public class RestProjectServlet extends RestServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -77,8 +79,24 @@ public class RestProjectServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// TODO
+		String payload = getRequestPayload(request);
+		
+		Project project = new Gson().fromJson(payload, Project.class);
+		project.setCompanyId((int) request.getSession().getAttribute(
+				"companyid"));
 
+		try (MySqlDAOFactory factory = new MySqlDAOFactory()) {
+
+			if (project.getId() == 0)
+				factory.getProjectDAO().addProject(project);
+			else
+				factory.getProjectDAO().updateProject(project);
+
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
+		
+		createEmptyResponse(response);
 	}
 
 	/**
@@ -88,7 +106,8 @@ public class RestProjectServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		// TODO
-
+		
+		createEmptyResponse(response);
 	}
 
 }

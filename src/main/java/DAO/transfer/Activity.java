@@ -5,6 +5,7 @@ public class Activity extends TransferObject {
 	private int id;
 	private int companyId;
 	private String name;
+	private String description;
 	private double hours;
 
 	public Activity() {
@@ -35,6 +36,14 @@ public class Activity extends TransferObject {
 		this.name = name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public double getHours() {
 		return hours;
 	}
@@ -42,5 +51,4 @@ public class Activity extends TransferObject {
 	public void setHours(double hours) {
 		this.hours = hours;
 	}
-
 }
